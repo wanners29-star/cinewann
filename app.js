@@ -11,17 +11,19 @@ const samples = [
     colors: ["#236b69", "#12283a"],
     poster: ""
   },
-  {
-    id: "sintel",
-    title: "Sintel",
-    category: "Películas",
-    year: "2010",
-    desc: "Fantasía y aventura · Animación",
-    url: "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-    colors: ["#a34a32", "#27152b"],
-    poster: "",
-    placeholder: false
-  },
+  
+{
+  id: "sintel",
+  title: "Sintel",
+  category: "Películas",
+  year: "2010",
+  desc: "Fantasía y aventura · Animación",
+  url: "https://test-videos.co.uk/vids/sintel/mp4/h264/720/Sintel_720_10s_2MB.mp4",
+  colors: ["#a34a32", "#27152b"],
+  poster: "",
+  placeholder: false
+},
+
   {
     id: "tears",
     title: "Tears of Steel",
