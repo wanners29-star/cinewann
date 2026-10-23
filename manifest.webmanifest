@@ -1,0 +1,23 @@
+{
+  "id": "./",
+  "name": "Cinewann — Streaming gratuito",
+  "short_name": "Cinewann",
+  "description": "Películas y videos gratuitos de fuentes autorizadas.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090d14",
+  "theme_color": "#090d14",
+  "icons": [
+    {
+      "src": "./assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "entertainment",
+    "video"
+  ]
+}

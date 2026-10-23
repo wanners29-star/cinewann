@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d14">
+  <meta name="description" content="Cinewann: películas y videos gratuitos con fuentes legales.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Cinewann — Streaming gratuito</title>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Cinewann inicio"><span class="brand-mark">▶</span> cine<span>wann</span></a>
+    <label class="search"><span>⌕</span><input id="search" type="search" placeholder="Buscar títulos, categorías…" aria-label="Buscar contenido"></label>
+    <button id="installBtn" class="install-btn" hidden>Instalar app</button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <button class="nav active" data-filter="Todo">⌂ <span>Inicio</span></button>
+      <button class="nav" data-filter="Películas">▣ <span>Películas</span></button>
+      <button class="nav" data-filter="Series">▤ <span>Series</span></button>
+      <button class="nav" data-filter="Anime">✦ <span>Anime</span></button>
+      <button class="nav" data-filter="Documentales">◉ <span>Documentales</span></button>
+      <button class="nav" data-filter="Videos">▷ <span>Videos</span></button>
+      <div class="side-note"><b>100% gratis</b><p>Sin anuncios ni suscripciones. El catálogo depende de fuentes con permiso de reproducción.</p></div>
+    </aside>
+
+    <main>
+      <section class="hero">
+        <div class="hero-shade"></div>
+        <div class="hero-content">
+          <p class="eyebrow">CINEWANN PRESENTA</p>
+          <h1>Historias para<br><em>ver sin límites.</em></h1>
+          <p class="hero-copy">Descubre películas y videos gratuitos de fuentes autorizadas.</p>
+          <button class="primary" id="heroPlay">▶ Explorar contenido</button>
+        </div>
+        <div class="hero-orb orb-one"></div><div class="hero-orb orb-two"></div>
+      </section>
+
+      <div class="content-head">
+        <div><p class="eyebrow">TU PRÓXIMA HISTORIA</p><h2 id="sectionTitle">Catálogo gratuito</h2></div>
+        <span id="count" class="count"></span>
+      </div>
+      <div id="catalog" class="catalog"></div>
+      <section class="legal">
+        <h3>¿No encuentras una película?</h3>
+        <p>Cinewann solo reproduce videos de fuentes autorizadas. Puedes añadir enlaces directos a videos propios, de dominio público o con licencia que permita su reproducción. No alojamos ni desbloqueamos contenido de pago.</p>
+        <button id="showAdd" class="secondary">＋ Añadir un video autorizado</button>
+      </section>
+      <form id="addForm" class="add-form" hidden>
+        <h3>Añadir video</h3>
+        <label>Título<input id="newTitle" required maxlength="100" placeholder="Nombre del video"></label>
+        <label>Categoría<select id="newCategory"><option>Películas</option><option>Series</option><option>Anime</option><option>Documentales</option><option>Videos</option></select></label>
+        <label>URL directa del video (MP4/WebM)<input id="newUrl" type="url" required placeholder="https://ejemplo.org/video.mp4"></label>
+        <label>URL de imagen (opcional)<input id="newPoster" type="url" placeholder="https://ejemplo.org/portada.jpg"></label>
+        <p class="form-hint">Añade únicamente enlaces que tengas derecho a compartir. Los elementos personalizados se guardan en este dispositivo.</p>
+        <div class="form-actions"><button class="primary" type="submit">Guardar video</button><button class="secondary" id="cancelAdd" type="button">Cancelar</button></div>
+      </form>
+      <footer>© <span id="year"></span> Cinewann · Streaming gratuito y legal</footer>
+    </main>
+  </div>
+
+  <dialog id="playerDialog" class="player-dialog">
+    <div class="player-top"><div><span class="brand-mark">▶</span> <b id="playerTitle">Reproduciendo</b></div><button id="closePlayer" class="close" aria-label="Cerrar reproductor">✕</button></div>
+    <video id="videoPlayer" controls playsinline preload="metadata"></video>
+    <p id="playerNote">Si el video no se reproduce, comprueba que la fuente permita reproducción directa y CORS cuando corresponda.</p>
+  </dialog>
+  <div id="toast" role="status" class="toast" hidden></div>
+  <script src="./app.js"></script>
+</body>
+</html>
