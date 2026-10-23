@@ -262,6 +262,24 @@ function openItem(id) {
   };
 
   player.src = activeUrl;
+  
+  let directLink = document.querySelector("#directVideoLink");
+
+  if (!directLink) {
+    directLink = document.createElement("a");
+    directLink.id = "directVideoLink";
+    directLink.target = "_blank";
+    directLink.rel = "noopener noreferrer";
+    directLink.textContent = "Abrir video directamente";
+    directLink.style.cssText =
+      "display:block;margin:12px 0;padding:12px;background:#ff3c55;color:white;text-align:center;text-decoration:none;border-radius:8px;font-weight:bold";
+
+    player.insertAdjacentElement("afterend", directLink);
+  }
+
+  directLink.href = activeUrl;
+  directLink.hidden = false;
+  
   player.load();
 
   player.play().catch(error => {
