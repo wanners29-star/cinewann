@@ -5,18 +5,17 @@ const samples = [
     title: "Big Buck Bunny",
     category: "Películas",
     year: "2008",
-    desc: "Cortometraje animado · Blender Open Movies",
-    url: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+    desc: "Cortometraje animado · Video de demostración",
+    url: "https://www.w3schools.com/html/mov_bbb.mp4",
     colors: ["#236b69", "#12283a"],
-    poster: "",
-    legal: "Video de demostración. Verifica los términos de la fuente."
+    poster: ""
   },
   {
     id: "sintel",
     title: "Sintel",
     category: "Películas",
     year: "2010",
-    desc: "Fantasía y aventura · Video de demostración",
+    desc: "Fantasía y aventura · Añade una fuente autorizada",
     url: "",
     colors: ["#a34a32", "#27152b"],
     poster: "",
@@ -27,7 +26,7 @@ const samples = [
     title: "Tears of Steel",
     category: "Videos",
     year: "2012",
-    desc: "Ciencia ficción · Video de demostración",
+    desc: "Ciencia ficción · Añade una fuente autorizada",
     url: "",
     colors: ["#356c88", "#19263f"],
     poster: "",
@@ -38,9 +37,10 @@ const samples = [
     title: "Anime gratuito",
     category: "Anime",
     year: "Colección",
-    desc: "Añade anime con licencia abierta o permiso explícito",
+    desc: "Anime con licencia abierta o permiso explícito",
     url: "",
     colors: ["#7c3e86", "#251c46"],
+    poster: "",
     placeholder: true
   },
   {
@@ -48,9 +48,10 @@ const samples = [
     title: "Documentales",
     category: "Documentales",
     year: "Colección",
-    desc: "Añade documentales autorizados",
+    desc: "Documentales autorizados",
     url: "",
     colors: ["#4e765b", "#172c34"],
+    poster: "",
     placeholder: true
   },
   {
@@ -58,32 +59,32 @@ const samples = [
     title: "Series libres",
     category: "Series",
     year: "Colección",
-    desc: "Añade episodios de fuentes autorizadas",
+    desc: "Episodios de fuentes autorizadas",
     url: "",
     colors: ["#a65b45", "#35223a"],
+    poster: "",
     placeholder: true
   }
 ];
 
 let custom = [];
-
-try {
-  const saved = JSON.parse(
-    localStorage.getItem("cinewann.custom") || "[]"
-  );
-  if (Array.isArray(saved)) custom = saved;
-} catch (error) {
-  console.warn("No se pudieron cargar los videos guardados.", error);
-}
-
 let filter = "Todo";
 let deferredPrompt = null;
+let activeUrl = "";
 
-const catalog = document.querySelector("#catalog");
-const search = document.querySelector("#search");
-const dialog = document.querySelector("#playerDialog");
-const player = document.querySelector("#videoPlayer");
-const toast = document.querySelector("#toast");
+try {
+  const saved = JSON.parse(localStorage.getItem("cinewann.custom") || "[]");
+  if (Array.isArray(saved)) custom = saved;
+} catch (error) {
+  console.warn("No se pudieron recuperar los videos guardados.", error);
+}
+
+const $ = selector => document.querySelector(selector);
+const catalog = $("#catalog");
+const search = $("#search");
+const dialog = $("#playerDialog");
+const player = $("#videoPlayer");
+const toast = $("#toast");
 
 function allItems() {
   return [...samples, ...custom];
@@ -105,63 +106,51 @@ function notify(message) {
   clearTimeout(notify.timer);
   notify.timer = setTimeout(() => {
     toast.hidden = true;
-  }, 3200);
+  }, 5000);
 }
 
 function render() {
   const query = search.value.trim().toLowerCase();
 
   const items = allItems().filter(item => {
-    const matchesCategory =
-      filter === "Todo" || item.category === filter;
-
-    const text = [
-      item.title,
-      item.category,
-      item.desc
-    ].join(" ").toLowerCase();
-
-    return matchesCategory &&
-      (!query || text.includes(query));
+    const categoryMatch = filter === "Todo" || item.category === filter;
+    const text = `${item.title} ${item.category} ${item.desc}`.toLowerCase();
+    return categoryMatch && (!query || text.includes(query));
   });
 
-  document.querySelector("#sectionTitle").textContent =
+  $("#sectionTitle").textContent =
     filter === "Todo" ? "Catálogo gratuito" : filter;
 
-  document.querySelector("#count").textContent =
+  $("#count").textContent =
     `${items.length} ${items.length === 1 ? "título" : "títulos"}`;
 
-  if (items.length === 0) {
+  if (!items.length) {
     catalog.innerHTML =
-      '<p class="empty-message">No encontramos títulos. Prueba otra búsqueda o categoría.</p>';
+      '<p>No hay títulos para esta búsqueda. Prueba otra categoría.</p>';
     return;
   }
 
   catalog.innerHTML = items.map(item => {
     const colors = item.colors || ["#344d69", "#171b2b"];
-    const style = `--c1:${colors[0]};--c2:${colors[1]}`;
-    const poster = item.poster
-      ? `background-image:linear-gradient(0deg,#05070cf0,transparent 70%),url('${escapeHtml(item.poster)}');background-size:cover;background-position:center;`
+    const posterStyle = item.poster
+      ? `background-image:linear-gradient(0deg,#05070cf0,transparent 70%),url("${escapeHtml(item.poster)}");background-size:cover;background-position:center;`
       : "";
 
     return `
-      <article class="movie"
-        tabindex="0"
-        role="button"
+      <article class="movie" tabindex="0" role="button"
         data-id="${escapeHtml(item.id)}"
         aria-label="Abrir ${escapeHtml(item.title)}">
-
-        <div class="poster" style="${style};${poster}">
+        <div class="poster"
+          style="--c1:${colors[0]};--c2:${colors[1]};${posterStyle}">
           <span class="play-hover">▶</span>
           <div>
             <div class="poster-title">${escapeHtml(item.title)}</div>
             <span class="poster-sub">
-              ${escapeHtml(item.category.toUpperCase())}
-              · ${escapeHtml(item.year || "")}
+              ${escapeHtml(item.category.toUpperCase())} ·
+              ${escapeHtml(item.year || "")}
             </span>
           </div>
         </div>
-
         <h3>${escapeHtml(item.title)}</h3>
         <p>${escapeHtml(item.desc || item.category)}</p>
         <span class="tag">${item.placeholder ? "PRÓXIMAMENTE" : "GRATIS"}</span>
@@ -171,9 +160,7 @@ function render() {
 
   catalog.querySelectorAll(".movie").forEach(card => {
     const open = () => openItem(card.dataset.id);
-
     card.addEventListener("click", open);
-
     card.addEventListener("keydown", event => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -183,53 +170,108 @@ function render() {
   });
 }
 
+function showDiagnostic(message) {
+  let panel = $("#videoDiagnostic");
+
+  if (!panel) {
+    panel = document.createElement("div");
+    panel.id = "videoDiagnostic";
+    panel.style.cssText =
+      "margin-top:12px;padding:14px;background:#172131;border:1px solid #35445a;border-radius:10px;color:#f4f6fa;font-size:13px;line-height:1.6";
+
+    player.insertAdjacentElement("afterend", panel);
+  }
+
+  panel.replaceChildren();
+
+  const text = document.createElement("p");
+  text.textContent = message;
+  text.style.margin = "0 0 10px";
+  panel.appendChild(text);
+
+  const link = document.createElement("a");
+  link.href = activeUrl;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = "Abrir video directamente";
+  link.style.cssText = "color:#ff7587;font-weight:700";
+  panel.appendChild(link);
+
+  const retry = document.createElement("button");
+  retry.type = "button";
+  retry.textContent = "Reintentar";
+  retry.style.cssText =
+    "display:block;margin-top:12px;padding:9px 13px;border:0;border-radius:8px;background:#ff3c55;color:white;cursor:pointer";
+  retry.addEventListener("click", () => {
+    player.load();
+    player.play().catch(() => {});
+  });
+  panel.appendChild(retry);
+}
+
+function clearDiagnostic() {
+  $("#videoDiagnostic")?.remove();
+}
 
 function openItem(id) {
   const item = allItems().find(entry => entry.id === id);
   if (!item) return;
 
   if (item.placeholder || !item.url) {
-    notify("Este título aún no tiene un video disponible.");
-    document.querySelector("#addForm").hidden = false;
-    document.querySelector("#addForm").scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
+    notify("Este título aún no tiene una fuente de video configurada.");
+    $("#addForm").hidden = false;
+    $("#addForm").scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
 
-  const title = document.querySelector("#playerTitle");
+  activeUrl = item.url;
+  $("#playerTitle").textContent = item.title;
 
   player.pause();
   player.removeAttribute("src");
   player.load();
+  clearDiagnostic();
 
-  title.textContent = item.title;
+  if (!dialog.open) dialog.showModal();
 
-  player.addEventListener("error", function showVideoError() {
-    const error = player.error;
+  player.onerror = () => {
+    const code = player.error?.code;
     const messages = {
-      1: "La carga del video fue cancelada.",
-      2: "Error de red al descargar el video.",
-      3: "No se pudo decodificar el video.",
-      4: "El formato o la fuente no son compatibles."
+      1: "La reproducción se canceló antes de terminar.",
+      2: "Error de red: el video no se pudo descargar.",
+      3: "El navegador descargó el video, pero no pudo decodificarlo.",
+      4: "La fuente o el formato no son compatibles con este reproductor."
     };
 
-    notify(
-      messages[error?.code] ||
-      "No se pudo cargar el video. Comprueba la fuente."
+    showDiagnostic(
+      messages[code] ||
+      "No se pudo cargar el video. Comprueba la conexión y la fuente."
     );
-  }, { once: true });
+  };
 
-  if (!dialog.open) {
-    dialog.showModal();
-  }
+  player.onloadedmetadata = () => {
+    clearDiagnostic();
+  };
 
-  player.src = item.url;
+  player.onplaying = () => {
+    clearDiagnostic();
+  };
+
+  player.onwaiting = () => {
+    showDiagnostic("El video está esperando datos del servidor. Espera unos segundos.");
+  };
+
+  player.src = activeUrl;
   player.load();
 
-  player.play().catch(() => {
-    notify("Pulsa ▶ en el reproductor para intentar reproducir.");
+  player.play().catch(error => {
+    if (error.name === "NotAllowedError") {
+      showDiagnostic("El navegador bloqueó el inicio automático. Pulsa ▶ en el video.");
+    } else {
+      showDiagnostic(
+        "El navegador no pudo iniciar el video. Puedes abrir la fuente directamente para comprobarla."
+      );
+    }
   });
 }
 
@@ -237,14 +279,17 @@ function closePlayer() {
   player.pause();
   player.removeAttribute("src");
   player.load();
+  player.onerror = null;
+  player.onloadedmetadata = null;
+  player.onplaying = null;
+  player.onwaiting = null;
+  activeUrl = "";
+  clearDiagnostic();
 
   if (dialog.open) dialog.close();
 }
 
-document.querySelector("#closePlayer").addEventListener(
-  "click",
-  closePlayer
-);
+$("#closePlayer").addEventListener("click", closePlayer);
 
 dialog.addEventListener("click", event => {
   if (event.target === dialog) closePlayer();
@@ -264,7 +309,7 @@ document.querySelectorAll(".nav").forEach(button => {
   });
 });
 
-document.querySelector("#heroPlay").addEventListener("click", () => {
+$("#heroPlay").addEventListener("click", () => {
   filter = "Todo";
 
   document.querySelectorAll(".nav").forEach(button => {
@@ -275,28 +320,25 @@ document.querySelector("#heroPlay").addEventListener("click", () => {
   catalog.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
-document.querySelector("#showAdd").addEventListener("click", () => {
-  document.querySelector("#addForm").hidden = false;
-  document.querySelector("#addForm").scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
+$("#showAdd").addEventListener("click", () => {
+  $("#addForm").hidden = false;
+  $("#addForm").scrollIntoView({ behavior: "smooth", block: "center" });
 });
 
-document.querySelector("#cancelAdd").addEventListener("click", () => {
-  document.querySelector("#addForm").hidden = true;
+$("#cancelAdd").addEventListener("click", () => {
+  $("#addForm").hidden = true;
 });
 
-document.querySelector("#addForm").addEventListener("submit", event => {
+$("#addForm").addEventListener("submit", event => {
   event.preventDefault();
 
-  const title = document.querySelector("#newTitle").value.trim();
-  const url = document.querySelector("#newUrl").value.trim();
-  const poster = document.querySelector("#newPoster").value.trim();
-  const category = document.querySelector("#newCategory").value;
+  const title = $("#newTitle").value.trim();
+  const url = $("#newUrl").value.trim();
+  const poster = $("#newPoster").value.trim();
+  const category = $("#newCategory").value;
 
   if (!title || !/^https?:\/\//i.test(url)) {
-    notify("Introduce un título y una URL válida.");
+    notify("Escribe un título y una URL válida.");
     return;
   }
 
@@ -318,7 +360,7 @@ document.querySelector("#addForm").addEventListener("submit", event => {
     localStorage.setItem("cinewann.custom", JSON.stringify(custom));
   } catch (error) {
     custom.pop();
-    notify("No se pudo guardar el video en este dispositivo.");
+    notify("No se pudo guardar el video en este navegador.");
     return;
   }
 
@@ -331,16 +373,16 @@ document.querySelector("#addForm").addEventListener("submit", event => {
   });
 
   render();
-  notify("Video añadido correctamente.");
+  notify("Video añadido en este dispositivo.");
 });
 
 window.addEventListener("beforeinstallprompt", event => {
   event.preventDefault();
   deferredPrompt = event;
-  document.querySelector("#installBtn").hidden = false;
+  $("#installBtn").hidden = false;
 });
 
-document.querySelector("#installBtn").addEventListener("click", async () => {
+$("#installBtn").addEventListener("click", async () => {
   if (!deferredPrompt) {
     notify("Usa el menú del navegador para instalar Cinewann.");
     return;
@@ -349,7 +391,7 @@ document.querySelector("#installBtn").addEventListener("click", async () => {
   deferredPrompt.prompt();
   await deferredPrompt.userChoice;
   deferredPrompt = null;
-  document.querySelector("#installBtn").hidden = true;
+  $("#installBtn").hidden = true;
 });
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
@@ -360,6 +402,5 @@ if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   });
 }
 
-document.querySelector("#year").textContent = new Date().getFullYear();
-
+$("#year").textContent = new Date().getFullYear();
 render();
