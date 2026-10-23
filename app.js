@@ -183,6 +183,7 @@ function render() {
   });
 }
 
+
 function openItem(id) {
   const item = allItems().find(entry => entry.id === id);
   if (!item) return;
@@ -197,13 +198,38 @@ function openItem(id) {
     return;
   }
 
-  document.querySelector("#playerTitle").textContent = item.title;
+  const title = document.querySelector("#playerTitle");
+
   player.pause();
+  player.removeAttribute("src");
+  player.load();
+
+  title.textContent = item.title;
+
+  player.addEventListener("error", function showVideoError() {
+    const error = player.error;
+    const messages = {
+      1: "La carga del video fue cancelada.",
+      2: "Error de red al descargar el video.",
+      3: "No se pudo decodificar el video.",
+      4: "El formato o la fuente no son compatibles."
+    };
+
+    notify(
+      messages[error?.code] ||
+      "No se pudo cargar el video. Comprueba la fuente."
+    );
+  }, { once: true });
+
+  if (!dialog.open) {
+    dialog.showModal();
+  }
+
   player.src = item.url;
-  dialog.showModal();
+  player.load();
 
   player.play().catch(() => {
-    notify("Pulsa reproducir para intentar ver el video.");
+    notify("Pulsa ▶ en el reproductor para intentar reproducir.");
   });
 }
 
