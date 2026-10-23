@@ -1,5 +1,6 @@
 const samples = [
- {id:"bbb",title:"Big Buck Bunny",category:"Películas",year:"2008",desc:"Cortometraje animado · Blender Open Movies",url:"https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",colors:["#236b69","#12283a"],poster:"",legal:"Video de demostración; verifica los términos del proveedor antes de publicar."},
+ 
+ {id:"bbb",title:"Big Buck Bunny",category:"Películas",year:"2008",desc:"Cortometraje animado · Blender Open Movies",url:"https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4",colors:["#236b69","#12283a"],poster:"",legal:"Video de demostración; verifica los términos del proveedor antes de publicar."},
  {id:"sintel",title:"Sintel",category:"Películas",year:"2010",desc:"Fantasía y aventura · Blender Open Movies",url:"https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",colors:["#a34a32","#27152b"],poster:"",legal:"Video de demostración; verifica los términos del proveedor antes de publicar."},
  {id:"tears",title:"Tears of Steel",category:"Videos",year:"2012",desc:"Ciencia ficción · Blender Open Movies",url:"https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",colors:["#356c88","#19263f"],poster:"",legal:"Video de demostración; verifica los términos del proveedor antes de publicar."},
  {id:"anime",title:"Anime gratuito",category:"Anime",year:"Colección",desc:"Añade anime con licencia abierta o permiso explícito",url:"",colors:["#7c3e86","#251c46"],placeholder:true},
