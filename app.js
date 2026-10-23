@@ -1,11 +1,12 @@
 
+
 const samples = [
   {
     id: "bbb",
     title: "Big Buck Bunny",
     category: "Películas",
     year: "2008",
-    desc: "Cortometraje animado · Video de demostración",
+    desc: "Animación y comedia · Video de muestra",
     url: "https://www.w3schools.com/html/mov_bbb.mp4",
     colors: ["#236b69", "#12283a"],
     poster: ""
@@ -15,22 +16,33 @@ const samples = [
     title: "Sintel",
     category: "Películas",
     year: "2010",
-    desc: "Fantasía y aventura · Añade una fuente autorizada",
-    url: "",
+    desc: "Fantasía y aventura · Animación",
+    url: "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
     colors: ["#a34a32", "#27152b"],
     poster: "",
-    placeholder: true
+    placeholder: false
   },
   {
     id: "tears",
     title: "Tears of Steel",
     category: "Videos",
     year: "2012",
-    desc: "Ciencia ficción · Añade una fuente autorizada",
-    url: "",
+    desc: "Ciencia ficción · Efectos visuales",
+    url: "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
     colors: ["#356c88", "#19263f"],
     poster: "",
-    placeholder: true
+    placeholder: false
+  },
+  {
+    id: "elephants",
+    title: "Elephants Dream",
+    category: "Películas",
+    year: "2006",
+    desc: "Animación · Ciencia ficción",
+    url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    colors: ["#b17a3f", "#30243c"],
+    poster: "",
+    placeholder: false
   },
   {
     id: "anime",
