@@ -6,7 +6,7 @@ const samples = [
     category: "Películas",
     year: "2008",
     desc: "Cortometraje animado · Blender Open Movies",
-    url: "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4",
+    url: "https://www.w3schools.com/html/mov_bbb.mp4",
     colors: ["#236b69", "#12283a"],
     poster: "",
     legal: "Video de demostración. Verifica los términos de la fuente."
